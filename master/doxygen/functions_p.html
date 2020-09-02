@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">PMDK C++ bindings
-   &#160;<span id="projectnumber">1.2.0</span>
+   &#160;<span id="projectnumber">1.10</span>
    </div>
    <div id="projectbrief">This is the C++ bindings documentation for PMDK&#39;s libpmemobj.</div>
   </td>
@@ -69,21 +69,24 @@ $(function() {
 <li>p()
 : <a class="el" href="classpmem_1_1obj_1_1p.html#a3ab11de2b346b70bc94542fde9f85866">pmem::obj::p&lt; T &gt;</a>
 </li>
+<li>parent
+: <a class="el" href="structpmem_1_1obj_1_1experimental_1_1radix__tree_1_1node.html#ad12adf704a885a94b8538fdabc3474a3">pmem::obj::experimental::radix_tree&lt; Key, Value, BytesView &gt;::node</a>
+</li>
 <li>pcond
 : <a class="el" href="classpmem_1_1obj_1_1condition__variable.html#a11d99fa30df5ee2fa60f4e87d3af1713">pmem::obj::condition_variable</a>
 </li>
 <li>persist()
 : <a class="el" href="classpmem_1_1obj_1_1persistent__ptr.html#a25a44b42d2e9466cff96b62d1439b559">pmem::obj::persistent_ptr&lt; T &gt;</a>
-, <a class="el" href="classpmem_1_1obj_1_1pool__base.html#a439567476fb60bdd5b0687f3587f9415">pmem::obj::pool_base</a>
+, <a class="el" href="classpmem_1_1obj_1_1pool__base.html#a62614e17c84a28ec0fce3e1a65c90dea">pmem::obj::pool_base</a>
 </li>
 <li>persistency_type
 : <a class="el" href="classpmem_1_1obj_1_1persistent__ptr.html#a49b743ee332a992f938b2e086e9f182d">pmem::obj::persistent_ptr&lt; T &gt;</a>
 </li>
 <li>persistent_ptr()
-: <a class="el" href="classpmem_1_1obj_1_1persistent__ptr.html#a22b7f8fa1c18dd36c4a726e3cb25e584">pmem::obj::persistent_ptr&lt; T &gt;</a>
+: <a class="el" href="classpmem_1_1obj_1_1persistent__ptr.html#adf5d64a209866470043a33409cbd1764">pmem::obj::persistent_ptr&lt; T &gt;</a>
 </li>
 <li>persistent_ptr_base()
-: <a class="el" href="classpmem_1_1detail_1_1persistent__ptr__base.html#a9853a42c65af9297e2b02d0de72dbeef">pmem::detail::persistent_ptr_base&lt; T &gt;</a>
+: <a class="el" href="classpmem_1_1obj_1_1persistent__ptr__base.html#a51602c5383f310740e4e0c70c98b07b5">pmem::obj::persistent_ptr_base</a>
 </li>
 <li>plock
 : <a class="el" href="classpmem_1_1obj_1_1mutex.html#ade977fac648d994377bf07b53fc36415">pmem::obj::mutex</a>
@@ -96,17 +99,27 @@ $(function() {
 <li>pointer_to()
 : <a class="el" href="classpmem_1_1obj_1_1persistent__ptr.html#aff9a32d18e6ccaf34b1c08ca3ddeb473">pmem::obj::persistent_ptr&lt; T &gt;</a>
 </li>
+<li>pointer_to_offset()
+: <a class="el" href="classpmem_1_1detail_1_1self__relative__ptr__base__impl.html#af142914472e5c0fbe3405c62d96e4b69">pmem::detail::self_relative_ptr_base_impl&lt; OffsetType &gt;</a>
+</li>
 <li>pool()
-: <a class="el" href="classpmem_1_1obj_1_1pool.html#a7b373fb46d72a5c395194ff71af8ff17">pmem::obj::pool&lt; T &gt;</a>
+: <a class="el" href="classpmem_1_1obj_1_1pool.html#a41b44411aeb6b321e38d7378d5b62ece">pmem::obj::pool&lt; T &gt;</a>
 </li>
 <li>pool_base()
-: <a class="el" href="classpmem_1_1obj_1_1pool__base.html#a68b9430c045e4b2e0b59723d66df94eb">pmem::obj::pool_base</a>
+: <a class="el" href="classpmem_1_1obj_1_1pool__base.html#a8a23bb65137dc9de11d5d1584c76ac12">pmem::obj::pool_base</a>
 </li>
 <li>pop_back()
-: <a class="el" href="classpmem_1_1obj_1_1experimental_1_1vector.html#a692a2011bfa77c667a8d8b417d9d445c">pmem::obj::experimental::vector&lt; T &gt;</a>
+: <a class="el" href="classpmem_1_1obj_1_1basic__string.html#a3b41a7c888f7dd4a582c87edf74f328f">pmem::obj::basic_string&lt; CharT, Traits &gt;</a>
+, <a class="el" href="classpmem_1_1obj_1_1segment__vector.html#ac0e672237c087e7ce916297cc38f11bb">pmem::obj::segment_vector&lt; T, Policy &gt;</a>
+, <a class="el" href="classpmem_1_1obj_1_1vector.html#a4820e20ca9b0047918e0402ff2e1c610">pmem::obj::vector&lt; T &gt;</a>
+</li>
+<li>push_and_try_lock()
+: <a class="el" href="classpmem_1_1obj_1_1concurrent__hash__map_1_1mutex__vector.html#a48ac5b7cc1769264cfce782a6b03ba1a">pmem::obj::concurrent_hash_map&lt; Key, T, Hash, KeyEqual, MutexType, ScopedLockType &gt;::mutex_vector</a>
 </li>
 <li>push_back()
-: <a class="el" href="classpmem_1_1obj_1_1experimental_1_1vector.html#a744151a15dde1ad437d09630578275d6">pmem::obj::experimental::vector&lt; T &gt;</a>
+: <a class="el" href="classpmem_1_1obj_1_1basic__string.html#a2f1e17841cae2109f791781b953756cf">pmem::obj::basic_string&lt; CharT, Traits &gt;</a>
+, <a class="el" href="classpmem_1_1obj_1_1segment__vector.html#a7cf5b3ee5ed1a67c33dcbf9b18563936">pmem::obj::segment_vector&lt; T, Policy &gt;</a>
+, <a class="el" href="classpmem_1_1obj_1_1vector.html#a8330f2437218a9c80e9a992a3aba3536">pmem::obj::vector&lt; T &gt;</a>
 </li>
 </ul>
 </div><!-- contents -->
