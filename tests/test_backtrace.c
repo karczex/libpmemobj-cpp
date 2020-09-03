@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-/* Copyright 2015-2019, Intel Corporation */
+/* Copyright 2015-2020, Intel Corporation */
 
 /*
  * backtrace.c -- backtrace reporting routines
@@ -170,7 +170,7 @@ test_dump_backtrace(void)
 void
 test_sighandler(int sig)
 {
-	printf("\nSignal %d, backtrace:\n", sig);
+	printf("\nSignal: %s, backtrace:\n", strsignal(sig));
 	test_dump_backtrace();
 	printf("\n");
 	exit(128 + sig);
