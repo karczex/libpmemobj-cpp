@@ -39,6 +39,7 @@ fi
 
 # Build a Docker image tagged with ${DOCKERHUB_REPO}:1.11-OS-VER
 docker build -t ${DOCKERHUB_REPO}:1.11-${OS_VER} \
+	-t ${DOCKERHUB_REPO}:latest-${OS_VER} \
 	--build-arg http_proxy=$http_proxy \
 	--build-arg https_proxy=$https_proxy \
 	-f Dockerfile.${OS_VER} .
