@@ -78,6 +78,12 @@ endif()
 
 add_library(valgrind_internal STATIC valgrind_internal.cpp)
 
+function(build_example_transaction)
+	add_executable(ex-transaction-general-tx ../examples/transaction/general_tx.cpp)
+	target_include_directories( ex-transaction-general-tx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../examples)
+	target_link_libraries(ex-transaction-general-tx ${LIBPMEMOBJ_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+endfunction()
+
 function(build_example_queue)
 	add_executable(ex-queue ../examples/queue/queue.cpp)
 	target_include_directories(ex-queue PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../examples)
@@ -103,6 +109,19 @@ if(BUILD_EXAMPLES AND NO_GCC_VARIADIC_TEMPLATE_BUG)
 	else()
 		message(WARNING "ncurses not found - pman test won't be build")
 	endif()
+
+	build_test(ex-transaction-general-tx ../examples/transaction/general_tx.cpp)
+	add_test_generic(NAME ex-transaction-general-tx TRACERS none SCRIPT ex-transaction/ex-transaction.cmake)
+
+	build_test(ex-transaction-automatic-tx ../examples/transaction/automatic_tx.cpp)
+	add_test_generic(NAME ex-transaction-automatic-tx TRACERS none SCRIPT ex-transaction/ex-transaction.cmake)
+
+	build_test(ex-transaction-manual-tx ../examples/transaction/manual_tx.cpp)
+	add_test_generic(NAME ex-transaction-manual-tx TRACERS none SCRIPT ex-transaction/ex-transaction.cmake)
+
+	build_test(ex-transaction-tx-callback ../examples/transaction/tx_callback.cpp)
+	add_test_generic(NAME ex-transaction-tx-callback TRACERS none SCRIPT ex-transaction/ex-transaction.cmake)
+
 elseif(BUILD_EXAMPLES)
 	message(WARNING "Skipping examples tests because of gcc variadic template bug")
 	skip_test("examples_tests" "SKIPPED_BECAUSE_OF_GCC_VARIADIC_TEMPLATE_BUG")
