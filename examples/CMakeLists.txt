@@ -217,4 +217,7 @@ add_example(make_persistent make_persistent/make_persistent.cpp)
 
 add_example(persistent persistent/persistent.cpp)
 
-add_example(transaction transaction/transaction.cpp)
+add_example(transaction-automatic_tx transaction/automatic_tx.cpp)
+add_example(transaction-general_tx transaction/general_tx.cpp)
+add_example(transaction-manual-tx transaction/manual_tx.cpp)
+add_example(transaction-tx_callback transaction/tx_callback.cpp)

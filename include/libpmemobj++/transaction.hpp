@@ -59,7 +59,7 @@ namespace obj
  * transaction.
  *
  * The typical usage example would be:
- * @snippet transaction/transaction.cpp general_tx_example
+ * @snippet transaction/general_tx.cpp general_tx_example
  */
 class transaction {
 public:
@@ -79,7 +79,7 @@ public:
 	 * acquired once again.
 	 *
 	 *The typical usage example would be:
-	 * @snippet transaction/transaction.cpp manual_tx_example
+	 * @snippet transaction/manual_tx.cpp manual_tx_example
 	 */
 	class manual {
 	public:
@@ -186,7 +186,7 @@ public:
 	 * acquired once again.
 	 *
 	 * The typical usage example would be:
-	 * @snippet transaction/transaction.cpp automatic_tx_example
+	 * @snippet transaction/automatic_tx.cpp automatic_tx_example
 	 */
 	class automatic {
 	public:
@@ -534,7 +534,7 @@ public:
 	 * scope
 	 *
 	 * The typical usage example would be:
-	 * @snippet transaction/transaction.cpp tx_callback_example
+	 * @snippet transaction/tx_callback.cpp tx_callback_example
 	 */
 	static void
 	register_callback(stage stg, std::function<void()> cb)
