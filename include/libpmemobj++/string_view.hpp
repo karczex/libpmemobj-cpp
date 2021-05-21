@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-/* Copyright 2020, Intel Corporation */
+/* Copyright 2020-2021, Intel Corporation */
 
 /**
  * @file
@@ -10,6 +10,7 @@
 #define LIBPMEMOBJ_CPP_STRING_VIEW
 
 #include <algorithm>
+#include <iostream>
 #include <limits>
 #include <stdexcept>
 #include <string>
@@ -1327,6 +1328,18 @@ operator>=(
 {
 	return lhs.compare(rhs) >= 0;
 }
+
+/**
+ * Non-member stream output operator.
+ */
+template <class CharT, class Traits>
+std::basic_ostream<CharT, Traits> &
+operator<<(std::basic_ostream<CharT, Traits> &os,
+	   basic_string_view<CharT, Traits> &rhs)
+{
+	return os << rhs.data();
+}
+
 #endif
 
 } /* namespace obj */

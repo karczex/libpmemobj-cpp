@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: BSD-3-Clause
-/* Copyright 2019-2020, Intel Corporation */
+/* Copyright 2019-2021, Intel Corporation */
 
 #include "unittest.hpp"
 
 #include <iostream>
 #include <libpmemobj++/string_view.hpp>
+#include <sstream>
 #include <string>
+#include <vector>
 
 template <typename T>
 void
@@ -23,11 +25,13 @@ test_string_view()
 			     "01234567890123456789"
 			     "01234567890123456789"
 			     "01234567890123456789");
+	std::string sWithZeros("aaa\0bbb\0ccc");
 
 	std::basic_string<T> ts1(s1.begin(), s1.end());
 	std::basic_string<T> ts2(s2.begin(), s2.end());
 	std::basic_string<T> tsLonger(sLonger.begin(), sLonger.end());
 	std::basic_string<T> tsLonger2(sLonger2.begin(), sLonger2.end());
+	std::basic_string<T> tsWithZeros(sWithZeros.begin(), sWithZeros.end());
 
 	pmem::obj::basic_string_view<T> vEmpty;
 	pmem::obj::basic_string_view<T> v1(ts1.data(), ts1.length());
@@ -36,6 +40,8 @@ test_string_view()
 						tsLonger.length());
 	pmem::obj::basic_string_view<T> vLonger2(tsLonger2.data(),
 						 tsLonger2.length());
+	pmem::obj::basic_string_view<T> vWithZeros(tsWithZeros.data(),
+						   tsWithZeros.length());
 
 	UT_ASSERT(ts1.data() == v1.data());
 	UT_ASSERT(ts1.size() == v1.size());
@@ -51,6 +57,16 @@ test_string_view()
 
 	UT_ASSERT(vEmpty.data() == nullptr);
 	UT_ASSERT(vEmpty.size() == 0);
+	{
+		std::basic_stringstream<T> out;
+		out << vLonger;
+		UT_ASSERT(out.str() == tsLonger);
+	}
+	{
+		std::basic_stringstream<T> out;
+		out << vWithZeros;
+		UT_ASSERT(out.str() == tsWithZeros);
+	}
 }
 
 void
