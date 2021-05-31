@@ -12,7 +12,7 @@
 #include <libpmemobj++/transaction.hpp>
 
 #include <algorithm>
-#include <libpmemobj++/container/mpsc_queue.hpp>
+#include <libpmemobj++/experimental/mpsc_queue.hpp>
 #include <string>
 
 #define LAYOUT "multithreaded_mpsc_queue_test"

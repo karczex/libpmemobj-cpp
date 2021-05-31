@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <libpmemobj++/container/detail/ringbuf.h>
+#include <libpmemobj++/detail/ringbuf.h>
 
 using namespace pmem::obj::experimental::ringbuf;
 
