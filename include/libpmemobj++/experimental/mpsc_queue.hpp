@@ -17,7 +17,7 @@
 #include <atomic>
 #include <cstddef>
 #include <cstring>
-#include <libpmemobj++/container/detail/ringbuf.h>
+#include <libpmemobj++/detail/ringbuf.h>
 #include <stdexcept>
 
 namespace pmem
