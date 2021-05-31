@@ -21,6 +21,7 @@ struct root {
 	pmem::obj::persistent_ptr<char[]> log;
 };
 
+/* Test to consume from empty queue */
 int
 consume_empty(pmem::obj::pool<root> pop)
 {
@@ -35,6 +36,7 @@ consume_empty(pmem::obj::pool<root> pop)
 	return 0;
 }
 
+/* Test if user may continue to consume, when all data is already consumed */
 int
 consume_empty_after_insertion(pmem::obj::pool<root> pop)
 {
@@ -46,11 +48,13 @@ consume_empty_after_insertion(pmem::obj::pool<root> pop)
 	std::vector<std::string> values = {"xxx", "aaaaaaa", "bbbbb"};
 
 	auto worker = queue.register_worker();
+	/* Insert some data */
 	for (const auto &e : values) {
 		worker.produce(e.size(), [&](auto range) {
 			std::copy_n(e.begin(), e.size(), range.begin());
 		});
 	}
+	/* Consume all of it */
 	queue.consume([&](auto rd_acc) {
 		int i = 0;
 		for (const auto &str : rd_acc) {
@@ -58,15 +62,18 @@ consume_empty_after_insertion(pmem::obj::pool<root> pop)
 		}
 		UT_ASSERTeq(i, values.size());
 	});
-	bool consumed = queue.consume([&](auto rd_acc1) {
-		/* Shouldn't reach this line */
-		UT_ASSERT(false);
-	});
-	UT_ASSERTeq(consumed, false);
+
+	/* Try to consume empty queue */
+	for (int i = 0; i < 10; i++) {
+		bool consumed =
+			queue.consume([&](auto rd_acc1) { ASSERT_REACHED; });
+		UT_ASSERTeq(consumed, false);
+	}
 
 	return 0;
 }
 
+/* Basic produce-consume-recovery scenario */
 int
 basic_test(pmem::obj::pool<root> pop, bool create)
 {

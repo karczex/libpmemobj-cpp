@@ -41,9 +41,8 @@ public:
 
 	class read_accessor {
 	private:
-		mpsc_queue *queue;
-		size_t len;
 		char *data;
+		size_t len;
 
 		struct iterator {
 			iterator(char *data) : data(data)
@@ -90,15 +89,8 @@ public:
 		};
 
 	public:
-		read_accessor(mpsc_queue *q)
+		read_accessor(char *data, size_t len) : data(data), len(len)
 		{
-			queue = q;
-			size_t offset;
-			len = ringbuf_consume(queue->ring_buffer, &offset);
-			if (len == 0) {
-				throw std::runtime_error("");
-			}
-			data = queue->buf + offset;
 		}
 
 		iterator
@@ -111,11 +103,6 @@ public:
 		end()
 		{
 			return iterator(data + len);
-		}
-
-		~read_accessor()
-		{
-			ringbuf_release(queue->ring_buffer, len);
 		}
 	};
 
@@ -216,14 +203,15 @@ public:
 	bool
 	consume(Function &&f)
 	{
-		// XXX:Change this try-catch with something resonable
-		try {
-			auto acc = read_accessor(this);
+		size_t offset;
+		size_t len = ringbuf_consume(ring_buffer, &offset);
+		if (len != 0) {
+			auto acc = read_accessor(buf + offset, len);
 			f(acc);
+			ringbuf_release(ring_buffer, len);
 			return true;
-		} catch (std::runtime_error &e) {
-			return false;
 		}
+		return false;
 	}
 
 	// XXX - Move logic from this function to consume (this requires setting
