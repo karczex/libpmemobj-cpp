@@ -966,6 +966,11 @@ if(TEST_MPSC_QUEUE)
 
 	build_test(mpsc_queue_basic mpsc_queue/basic.cpp)
 	add_test_generic(NAME mpsc_queue_basic SCRIPT mpsc_queue/mpsc_queue_basic_0.cmake TRACERS none)
+
+	#Test for internal implementation
+	build_test(ringbuf mpsc_queue/ringbuf.cpp)
+	add_test_generic(NAME ringbuf SCRIPT mpsc_queue/mpsc_queue_basic_0.cmake TRACERS none)
+
 endif()
 ################################################################################
 #################################### RADIX_TREE ################################
