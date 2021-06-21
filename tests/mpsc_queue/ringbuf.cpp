@@ -32,7 +32,7 @@
  */
 
 #include <stdlib.h>
-
+#include <memory>
 #include "unittest.hpp"
 #include <libpmemobj++/detail/ringbuf.hpp>
 
@@ -41,9 +41,8 @@ using namespace pmem::obj::experimental::ringbuf;
 #define MAX_WORKERS 2
 
 static void
-test_wraparound(void)
+test_wraparound(size_t n)
 {
-	const size_t n = 1000;
 	ringbuf_t *r = new ringbuf_t(MAX_WORKERS, n);
 	ringbuf_worker_t *w;
 	size_t len, woff;
@@ -239,12 +238,11 @@ test_overlap(void)
 }
 
 static void
-test_random(void)
+test_random(size_t buff_size)
 {
 	ssize_t off1 = -1, off2 = -1;
 	unsigned n = 1000 * 1000 * 50;
-	constexpr size_t buff_size = 500;
-	unsigned char buf[buff_size];
+	auto buf = std::unique_ptr<unsigned char[]>(new unsigned char[buff_size]);
 
 	ringbuf_t *r = new ringbuf_t(MAX_WORKERS, buff_size);
 	ringbuf_worker_t *w1, *w2;
@@ -255,14 +253,14 @@ test_random(void)
 	while (n--) {
 		size_t len, woff;
 
-		len = static_cast<size_t>(random()) % (sizeof(buf) / 2) + 1;
+		len = static_cast<size_t>(random()) % (buff_size / 2) + 1;
 		switch (random() % 3) {
 			/* consumer */
 			case 0:
 				len = ringbuf_consume(r, &woff);
 				if (len > 0) {
 					size_t vlen = 0;
-					UT_ASSERT(woff < sizeof(buf));
+					UT_ASSERT(woff < buff_size);
 					while (vlen < len) {
 						size_t mlen =
 							(unsigned)buf[woff];
@@ -280,7 +278,7 @@ test_random(void)
 					if ((off1 = ringbuf_acquire(
 						     r, w1, len)) >= 0) {
 						UT_ASSERT((size_t)off1 <
-							  sizeof(buf));
+							  buff_size);
 						buf[off1] = len - 1;
 					}
 				} else {
@@ -295,7 +293,7 @@ test_random(void)
 					if ((off2 = ringbuf_acquire(
 						     r, w2, len)) >= 0) {
 						UT_ASSERT((size_t)off2 <
-							  sizeof(buf));
+							  buff_size);
 						buf[off2] = len - 1;
 					}
 				} else {
@@ -314,9 +312,11 @@ test_random(void)
 int
 main(void)
 {
-	test_wraparound();
+	test_wraparound(1000);
+	test_wraparound(0x1ULL << 58);
 	test_multi();
 	test_overlap();
-	test_random();
+	test_random(500);
+	test_random(0x1ULL << 22 );
 	return 0;
 }

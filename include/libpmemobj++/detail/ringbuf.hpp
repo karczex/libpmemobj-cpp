@@ -65,11 +65,11 @@ namespace experimental
 
 namespace ringbuf
 {
-static constexpr size_t RBUF_OFF_MASK = 0x00000000ffffffffUL;
+static constexpr size_t RBUF_OFF_MASK = 0x0fffffffffffffffUL;
 static constexpr size_t WRAP_LOCK_BIT = 0x8000000000000000UL;
 static constexpr size_t RBUF_OFF_MAX = UINT64_MAX & ~WRAP_LOCK_BIT;
 
-static constexpr size_t WRAP_COUNTER = 0x7fffffff00000000UL;
+static constexpr size_t WRAP_COUNTER = 0x7000000000000000UL;
 static size_t
 WRAP_INCR(size_t x)
 {
