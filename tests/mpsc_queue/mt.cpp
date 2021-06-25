@@ -51,6 +51,7 @@ mt_test(pmem::obj::pool<root> pop, size_t concurrency)
 	std::vector<std::string> values_on_pmem;
 	parallel_exec(concurrency + 1, [&](size_t thread_id) {
 		if (thread_id == 0) {
+			DP(thread_id);
 			/* Read data while writting */
 			while (threads_counter.load() > 0) {
 				queue.try_consume_batch(
@@ -66,6 +67,7 @@ mt_test(pmem::obj::pool<root> pop, size_t concurrency)
 			}
 			UT_ASSERTeq(values_on_pmem.empty(), false);
 		} else {
+			DP(thread_id);
 			/* Concurrently add data to queue */
 			auto worker = queue.register_worker();
 			size_t x = 0;
@@ -89,12 +91,17 @@ mt_test(pmem::obj::pool<root> pop, size_t concurrency)
 		}
 	});
 
-	/* Consume the rest of the data. */
-	queue.try_consume_batch([&](queue_type::batch_type rd_acc1) {
+	auto size_after_all_produce = values_on_pmem.size();
+	/* Consume the rest of the data.  */
+	consumed = queue.try_consume_batch([&](queue_type::batch_type rd_acc1) {
 		for (auto str : rd_acc1) {
 			values_on_pmem.emplace_back(str.data(), str.size());
 		}
 	});
+
+	if (size_after_all_produce == values.size() * concurrency) {
+		UT_ASSERTeq(consumed, false);
+	}
 
 	/* At this moment queue should be empty */
 	consumed = queue.try_consume_batch(
@@ -104,6 +111,7 @@ mt_test(pmem::obj::pool<root> pop, size_t concurrency)
 	for (auto &v : values) {
 		auto count = std::count(values_on_pmem.begin(),
 					values_on_pmem.end(), v);
+		DP(v);
 		UT_ASSERTeq(count, static_cast<int>(concurrency));
 	}
 }
