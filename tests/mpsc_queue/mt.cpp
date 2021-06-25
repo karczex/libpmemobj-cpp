@@ -10,7 +10,9 @@
 
 #include <algorithm>
 #include <atomic>
+#include <chrono>
 #include <string>
+#include <thread>
 
 #include <libpmemobj++/experimental/mpsc_queue.hpp>
 #include <libpmemobj++/make_persistent.hpp>
@@ -52,9 +54,11 @@ mt_test(pmem::obj::pool<root> pop, size_t concurrency)
 	parallel_exec(concurrency + 1, [&](size_t thread_id) {
 		if (thread_id == 0) {
 			DP(thread_id);
+			size_t cnt = 0;
 			/* Read data while writting */
 			while (threads_counter.load() > 0) {
-				queue.try_consume_batch(
+				cnt++;
+				auto result = queue.try_consume_batch(
 					[&](pmem::obj::experimental::
 						    mpsc_queue::batch_type
 							    rd_acc) {
@@ -64,6 +68,13 @@ mt_test(pmem::obj::pool<root> pop, size_t concurrency)
 								str.size());
 						}
 					});
+				if (result == true) {
+					cnt = 0;
+				} else {
+					std::this_thread::sleep_for(
+						std::chrono::milliseconds(cnt));
+				}
+				UT_ASSERTne(cnt, 100);
 			}
 			UT_ASSERTeq(values_on_pmem.empty(), false);
 		} else {
