@@ -30,6 +30,11 @@
 #define os_stat _stat64
 #endif
 
+#define DP(x)                                                                  \
+	do {                                                                   \
+		std::cout << #x << " = " << x << std::endl;                    \
+	} while (0)
+
 static inline void
 UT_OUT(const char *format, ...)
 {
