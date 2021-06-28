@@ -100,9 +100,8 @@ mt_test(pmem::obj::pool<root> pop, size_t concurrency)
 		for (auto str : rd_acc1) {
 			/* Should left some data to be consumed */
 			UT_ASSERTne(values_on_pmem.size(),
-				    values.size() * concurrency)
-				values_on_pmem.emplace_back(str.data(),
-							    str.size());
+				    values.size() * concurrency);
+			values_on_pmem.emplace_back(str.data(), str.size());
 		}
 	});
 
@@ -111,9 +110,15 @@ mt_test(pmem::obj::pool<root> pop, size_t concurrency)
 		[&](queue_type::batch_type rd_acc) { ASSERT_UNREACHABLE; });
 	UT_ASSERTeq(consumed, false);
 
+	std::cout << "++++++++++++++++++++++" << std::endl;
+	for (auto &v : values_on_pmem) {
+		std::cout << v << std::endl;
+	}
+	std::cout << "++++++++++++++++++++++" << std::endl;
 	for (auto &v : values) {
 		auto count = std::count(values_on_pmem.begin(),
 					values_on_pmem.end(), v);
+		std::cout << v << std::endl;
 		UT_ASSERTeq(count, static_cast<int>(concurrency));
 	}
 }
