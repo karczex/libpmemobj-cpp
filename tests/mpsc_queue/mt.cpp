@@ -82,12 +82,16 @@ mt_test(pmem::obj::pool<root> pop, size_t concurrency)
 						[&](pmem::obj::slice<char *>
 							    range) {
 							x++;
-							std::copy_n(
-								e.begin(),
-								e.size(),
-								range.begin());
-							produced.emplace_back(
-								e);
+							try {
+								std::copy_n(
+									e.begin(),
+									e.size(),
+									range.begin());
+								produced.emplace_back(
+									e);
+							} catch (...) {
+								ASSERT_UNREACHABLE;
+							}
 							entered = true;
 						});
 					UT_ASSERTeq(insert_succeed, entered);
