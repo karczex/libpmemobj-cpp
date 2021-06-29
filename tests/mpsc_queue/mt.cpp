@@ -42,6 +42,7 @@ mt_test(pmem::obj::pool<root> pop, size_t concurrency)
 	UT_ASSERTeq(consumed, false);
 
 	std::vector<std::string> values = {"xxx", "aaaaaaa", "bbbbb", "cccc"};
+	std::vector<std::string> produced;
 
 	std::atomic<size_t> threads_counter(concurrency);
 #if LIBPMEMOBJ_CPP_VG_HELGRIND_ENABLED
@@ -85,6 +86,8 @@ mt_test(pmem::obj::pool<root> pop, size_t concurrency)
 								e.begin(),
 								e.size(),
 								range.begin());
+							produced.emplace_back(
+								e);
 							entered = true;
 						});
 					UT_ASSERTeq(insert_succeed, entered);
@@ -110,10 +113,16 @@ mt_test(pmem::obj::pool<root> pop, size_t concurrency)
 		[&](queue_type::batch_type rd_acc) { ASSERT_UNREACHABLE; });
 	UT_ASSERTeq(consumed, false);
 
-	std::cout << "++++++++++++++++++++++" << std::endl;
+	std::cout << "++++++++Produced++++++++++++++" << std::endl;
+	for (auto &v : produced) {
+		std::cout << v << std::endl;
+	}
+
+	std::cout << "++++++++Consumed++++++++++++++" << std::endl;
 	for (auto &v : values_on_pmem) {
 		std::cout << v << std::endl;
 	}
+
 	std::cout << "++++++++++++++++++++++" << std::endl;
 	for (auto &v : values) {
 		auto count = std::count(values_on_pmem.begin(),
