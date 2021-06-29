@@ -131,9 +131,9 @@ test(int argc, char *argv[])
 
 	const char *path = argv[1];
 
-	size_t concurrency = 48;
+	size_t concurrency = 1;
 	if (On_valgrind)
-		concurrency = 2;
+		concurrency = 1;
 
 	pmem::obj::pool<struct root> pop;
 
