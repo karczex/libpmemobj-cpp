@@ -56,7 +56,7 @@ function tests_clang_debug_cpp17_no_valgrind() {
 		-DUSE_UBSAN=${TESTS_UBSAN}
 
 	make -j$(nproc)
-	ctest --output-on-failure -E "_pmreorder" --timeout ${TEST_TIMEOUT}
+	ctest -R mpsc_queue_mt_0_none --repeat-until-fail 1000 --output-on-failure -E "_pmreorder" --timeout ${TEST_TIMEOUT}
 	if [ "${COVERAGE}" == "1" ]; then
 		upload_codecov tests_clang_debug_cpp17
 	fi
@@ -93,7 +93,7 @@ function tests_clang_release_cpp11_no_valgrind() {
 		-DUSE_UBSAN=${TESTS_UBSAN}
 
 	make -j$(nproc)
-	ctest --output-on-failure -E "_pmreorder" --timeout ${TEST_TIMEOUT}
+	ctest -R mpsc_queue_mt_0_none --repeat-until-fail 1000 --output-on-failure -E "_pmreorder" --timeout ${TEST_TIMEOUT}
 	if [ "${COVERAGE}" == "1" ]; then
 		upload_codecov tests_clang_release_cpp11
 	fi
@@ -139,7 +139,7 @@ function build_gcc_debug_cpp14() {
 function tests_gcc_debug_cpp14_no_valgrind() {
 	printf "\n$(tput setaf 1)$(tput setab 7)BUILD ${FUNCNAME[0]} START$(tput sgr 0)\n"
 	build_gcc_debug_cpp14
-	ctest -E "_memcheck|_drd|_helgrind|_pmemcheck|_pmreorder" --timeout ${TEST_TIMEOUT} --output-on-failure
+	ctest -R mpsc_queue_mt_0_none --repeat-until-fail 1000 -E "_memcheck|_drd|_helgrind|_pmemcheck|_pmreorder" --timeout ${TEST_TIMEOUT} --output-on-failure
 	if [ "${COVERAGE}" == "1" ]; then
 		upload_codecov tests_gcc_debug
 	fi
@@ -153,7 +153,7 @@ function tests_gcc_debug_cpp14_no_valgrind() {
 function tests_gcc_debug_cpp14_valgrind_memcheck_drd() {
 	printf "\n$(tput setaf 1)$(tput setab 7)BUILD ${FUNCNAME[0]} START$(tput sgr 0)\n"
 	build_gcc_debug_cpp14
-	ctest -R "_memcheck|_drd" --timeout ${TEST_TIMEOUT} --output-on-failure
+	ctest -R mpsc_queue_mt_0_none --repeat-until-fail 1000 -R "_memcheck|_drd" --timeout ${TEST_TIMEOUT} --output-on-failure
 	workspace_cleanup
 	printf "$(tput setaf 1)$(tput setab 7)BUILD ${FUNCNAME[0]} END$(tput sgr 0)\n\n"
 }
@@ -164,8 +164,8 @@ function tests_gcc_debug_cpp14_valgrind_memcheck_drd() {
 function tests_gcc_debug_cpp14_valgrind_other() {
 	printf "\n$(tput setaf 1)$(tput setab 7)BUILD ${FUNCNAME[0]} START$(tput sgr 0)\n"
 	build_gcc_debug_cpp14
-	ctest -E "_none|_memcheck|_drd" --timeout ${TEST_TIMEOUT} --output-on-failure
-	ctest -R "_pmreorder" --timeout ${TEST_TIMEOUT} --output-on-failure
+	ctest -R mpsc_queue_mt_0_none --repeat-until-fail 1000 -E "_none|_memcheck|_drd" --timeout ${TEST_TIMEOUT} --output-on-failure
+	ctest -R mpsc_queue_mt_0_none --repeat-until-fail 1000 -R "_pmreorder" --timeout ${TEST_TIMEOUT} --output-on-failure
 	workspace_cleanup
 	printf "$(tput setaf 1)$(tput setab 7)BUILD ${FUNCNAME[0]} END$(tput sgr 0)\n\n"
 }
@@ -198,7 +198,7 @@ function tests_gcc_release_cpp17_no_valgrind() {
 		-DUSE_UBSAN=${TESTS_UBSAN}
 
 	make -j$(nproc)
-	ctest --output-on-failure --timeout ${TEST_TIMEOUT}
+	ctest -R mpsc_queue_mt_0_none --repeat-until-fail 1000 --output-on-failure --timeout ${TEST_TIMEOUT}
 	if [ "${COVERAGE}" == "1" ]; then
 		upload_codecov tests_gcc_release_cpp17_no_valgrind
 	fi
@@ -245,7 +245,7 @@ function tests_package() {
 		-DTESTS_USE_FORCED_PMEM=${TESTS_USE_FORCED_PMEM}
 
 	make -j$(nproc)
-	ctest --output-on-failure --timeout ${TEST_TIMEOUT}
+	ctest -R mpsc_queue_mt_0_none --repeat-until-fail 1000 --output-on-failure --timeout ${TEST_TIMEOUT}
 
 	make -j$(nproc) package
 
