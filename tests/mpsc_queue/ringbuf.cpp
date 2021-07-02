@@ -314,6 +314,36 @@ test_random(void)
 	delete r;
 }
 
+static void
+test_consume_twice()
+{
+	ringbuf_t *r = new ringbuf_t(MAX_WORKERS, 3);
+	ringbuf_worker_t *w;
+	ptrdiff_t off;
+
+	w = ringbuf_register(r, 0);
+
+	off = ringbuf_acquire(r, w, 1);
+	UT_ASSERT(off == 0);
+	ringbuf_produce(r, w);
+
+	off = ringbuf_acquire(r, w, 1);
+	UT_ASSERT(off == 1);
+	ringbuf_produce(r, w);
+
+	size_t woff1, woff2;
+	auto len1 = ringbuf_consume(r, &woff1);
+	UT_ASSERTeq(len1, 2);
+	auto len2 = ringbuf_consume(r, &woff2);
+	UT_ASSERTeq(len1, len2);
+	UT_ASSERTeq(woff1, woff2);
+
+	ringbuf_release(r, len1);
+
+	ringbuf_unregister(r, w);
+	delete r;
+}
+
 int
 main(void)
 {
@@ -321,7 +351,7 @@ main(void)
 	auto seed = rd();
 	std::cout << "rand seed: " << seed << std::endl;
 	generator = std::mt19937_64(seed);
-
+	test_consume_twice();
 	test_wraparound();
 	test_multi();
 	test_overlap();
