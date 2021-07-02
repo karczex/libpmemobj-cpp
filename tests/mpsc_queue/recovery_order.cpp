@@ -28,22 +28,21 @@ struct root {
 static void
 test_recovery(pmem::obj::pool<root> pop, bool create)
 {
-	const size_t produce_size = 64;
-
 	auto proot = pop.root();
 
-	auto queue = queue_type(*proot->log, 1);
+	auto queue = queue_type(*proot->log, 2);
 
-	auto store_next_element = [&](size_t &cnt,
-				      pmem::obj::slice<char *> range) {
-		auto value = std::to_string(cnt);
-		if (value.size() < produce_size)
-			value += std::string(produce_size - value.size(), 'X');
-
-		std::copy(value.begin(), value.end(), range.begin());
-
-		cnt++;
-	};
+	//	auto store_next_element = [&](size_t &cnt,
+	//				      pmem::obj::slice<char *> range) {
+	//		auto value = std::to_string(cnt);
+	//		if (value.size() < produce_size)
+	//			value += std::string(produce_size -
+	// value.size(), 'X');
+	//
+	//		std::copy(value.begin(), value.end(), range.begin());
+	//
+	//		cnt++;
+	//	};
 
 	if (create) {
 		bool consumed = queue.try_consume_batch(
@@ -52,24 +51,17 @@ test_recovery(pmem::obj::pool<root> pop, bool create)
 			});
 		UT_ASSERTeq(consumed, false);
 
-		size_t capacity = get_queue_capacity(queue, produce_size);
+		size_t capacity = get_queue_capacity(queue);
 		UT_ASSERTne(capacity, 0);
 
 		size_t cnt = 0;
 
-		make_queue_with_first_half_empty(
-			queue, capacity, produce_size,
-			[&](pmem::obj::slice<char *> range) {
-				store_next_element(cnt, range);
-			});
-
+		make_queue_with_first_half_empty(queue);
 		auto worker = queue.register_worker();
-
-		while (worker.try_produce(
-			produce_size, [&](pmem::obj::slice<char *> range) {
-				store_next_element(cnt, range);
-			}))
-			;
+		/* Produce elements with different sizes */
+		while (worker.try_produce(std::to_string(cnt))) {
+			cnt++;
+		}
 	} else {
 		std::vector<size_t> values_on_pmem;
 		/* Recover the data in second run of application */
@@ -77,9 +69,9 @@ test_recovery(pmem::obj::pool<root> pop, bool create)
 			for (auto entry : rd_acc) {
 				auto element =
 					std::string(entry.data(), entry.size());
-				element.erase(element.find('X'));
-				values_on_pmem.emplace_back(
-					std::stoull(element));
+				std::cout << element << std::endl;
+				//	values_on_pmem.emplace_back(
+				//		std::stoull(element));
 			}
 		});
 
